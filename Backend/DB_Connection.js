@@ -1,6 +1,7 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
+//Connection to postgres DB
 const client = new Client({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
