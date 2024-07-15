@@ -2,23 +2,30 @@ import "./App.css";
 
 import { useState } from "react";
 
-type imgType = {
+type postsType = {
   id: string;
-  name: string;
-  mimetype: string;
-  path: string;
+  description: string;
+  user_id: string;
+  images_path: string;
 };
 
 function App() {
-  const [imgData, setImgData] = useState<imgType>();
+  const [postsData, setPostsData] = useState<postType>();
+
+  const token = localStorage.getItem("token");
 
   async function fetchData() {
-    await fetch("http://127.0.0.1:3000/api/images")
+    await fetch("http://127.0.0.1:3000/api/posts", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((data) => {
         return data.json();
       })
       .then((dataJson) => {
-        setImgData(dataJson);
+        console.log(dataJson);
+        setPostsData(dataJson);
       })
       .catch((err) => {
         console.log(err);
@@ -28,13 +35,18 @@ function App() {
   return (
     <>
       <div>
-        {imgData?.map((img, index) => {
+        {postsData?.map((post, index) => {
           return (
-            <img
-              key={index}
-              src={`${img.path}`}
-              alt={`image number ${index}`}
-            />
+            <div key={index}>
+              <figure>
+                <img
+                  src={`${post.images_path}`}
+                  alt={`image number ${index}`}
+                  height={480}
+                />
+                <figcaption>{post.description.split('"')}</figcaption>
+              </figure>
+            </div>
           );
         })}
       </div>
