@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const client = require("./DB_Connection");
-const userRoutes = require("./routes/user");
-const imagesRoutes = require("./routes/images");
+const userRoutes = require("./routes/users");
+const imagesRoutes = require("./routes/posts");
 
 app.use(express.json());
 
@@ -30,5 +30,5 @@ app.listen(port, () => {
 client.connect();
 
 app.use("/api/users", userRoutes);
-app.use("/api/images", imagesRoutes);
-app.use("/api/images", express.static(path.join(__dirname, "images")));
+app.use("/api/posts", imagesRoutes);
+app.use("/api/posts", express.static(path.join(__dirname, "images")));
