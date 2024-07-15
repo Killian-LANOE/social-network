@@ -2,15 +2,17 @@ import "./App.css";
 
 import { useState } from "react";
 
-type postsType = {
-  id: string;
-  description: string;
-  user_id: string;
-  images_path: string;
-};
+type postsType = [
+  {
+    id: string;
+    description: string;
+    user_id: string;
+    images_path: string;
+  }
+];
 
 function App() {
-  const [postsData, setPostsData] = useState<postType>();
+  const [postsData, setPostsData] = useState<postsType>();
 
   const token = localStorage.getItem("token");
 
