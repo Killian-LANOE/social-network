@@ -1,4 +1,5 @@
 import "./App.css";
+import DeletePost from "./components/DeletePost";
 
 import { useState } from "react";
 
@@ -48,6 +49,8 @@ function App() {
                 />
                 <figcaption>{post.description.split('"')}</figcaption>
               </figure>
+
+              <DeletePost id={post.id} />
             </div>
           );
         })}
