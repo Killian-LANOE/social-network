@@ -4,7 +4,7 @@ const app = express();
 const path = require("path");
 const client = require("./DB_Connection");
 const userRoutes = require("./routes/users");
-const imagesRoutes = require("./routes/posts");
+const postsRoutes = require("./routes/posts");
 
 app.use(express.json());
 
@@ -30,5 +30,5 @@ app.listen(port, () => {
 client.connect();
 
 app.use("/api/users", userRoutes);
-app.use("/api/posts", imagesRoutes);
-app.use("/api/posts", express.static(path.join(__dirname, "images")));
+app.use("/api/posts", postsRoutes);
+app.use("/api/posts/images", express.static(path.join(__dirname, "images")));

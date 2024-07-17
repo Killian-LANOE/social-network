@@ -3,7 +3,6 @@ const client = require("../DB_Connection");
 exports.getPosts = (req, res) => {
   client.query(`SELECT * FROM posts`, (err, result) => {
     if (!err) {
-      console.log(result.rows);
       res.status(200).send(result.rows);
     } else {
       console.log(err.message);
@@ -11,12 +10,26 @@ exports.getPosts = (req, res) => {
   });
 };
 
+exports.getSpecificPost = (req, res) => {
+  client.query(
+    `SELECT * FROM posts WHERE id = ${req.params.id} `,
+    (err, result) => {
+      if (err) {
+        console.log(err.message);
+      } else if (result.rows.length === 0) {
+        res.status(404).send("Post not found");
+      } else {
+        res.status(200).send(result.rows[0]);
+      }
+    }
+  );
+};
+
 exports.createPost = (req, res) => {
   postDescription = JSON.stringify(req.body.description);
-  console.log(postDescription);
 
   //create an url to allow acces to the file stocked in our server
-  const filePath = `${req.protocol}://${req.get("host")}/api/posts/${
+  const filePath = `${req.protocol}://${req.get("host")}/api/posts/images/${
     req.file.filename
   }`;
 
@@ -30,4 +43,8 @@ exports.createPost = (req, res) => {
       res.status(500).send(err.message);
     }
   });
+};
+
+exports.DeletePost = (req, res) => {
+  let deleteQuery = `DROP`;
 };
