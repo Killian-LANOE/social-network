@@ -1,4 +1,5 @@
 const client = require("../DB_Connection");
+const fs = require("fs");
 
 exports.getPosts = (req, res) => {
   client.query(`SELECT * FROM posts`, (err, result) => {
@@ -47,18 +48,33 @@ exports.createPost = (req, res) => {
 
 exports.deletePost = (req, res) => {
   if (req.auth.id != req.body.userId && req.auth.isAdmin != true) {
+    console.log("unauthorized");
     res.status(401).send("You're not authorized to do that !");
   }
 
-  console.log(req.body);
+  console.log(req.params.id);
   client.query(
-    `DELETE FROM posts WHERE id= ${req.params.id}`,
+    `SELECT * FROM posts WHERE id = ${req.params.id}`,
     (err, result) => {
       if (err) {
-        res.status(500).send(err);
+        res.status(401).send("Post not found");
       }
 
-      res.status(200).send("Post deleted successfully");
+      const imageName = result.rows[0].images_path.split("/")[6];
+      console.log(imageName);
+
+      fs.unlinkSync(`./images/${imageName}`);
+
+      client.query(
+        `DELETE FROM posts WHERE id= ${req.params.id}`,
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.status(200).send("Post deleted successfully");
+          }
+        }
+      );
     }
   );
 };
