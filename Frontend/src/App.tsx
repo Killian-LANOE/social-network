@@ -1,5 +1,6 @@
 import "./App.css";
 import DeletePost from "./components/DeletePost";
+import ModifyPost from "./components/ModifyPost";
 
 import { useState, useEffect } from "react";
 
@@ -45,16 +46,19 @@ function App() {
             const description = post.description.split('"');
             return (
               <div key={index}>
-                <figure>
-                  <img
-                    src={`${post.images_path}`}
-                    alt={`image number ${index}`}
-                    height={480}
-                  />
-                  <figcaption>{description}</figcaption>
-                </figure>
+                <a href={post.images_path}>
+                  <figure>
+                    <img
+                      src={`${post.images_path}`}
+                      alt={`image number ${index}`}
+                      height={480}
+                    />
+                    <figcaption>{description}</figcaption>
+                  </figure>
+                </a>
 
                 <DeletePost id={post.id} />
+                <ModifyPost id={post.id} />
               </div>
             );
           })}

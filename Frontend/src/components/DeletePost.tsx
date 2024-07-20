@@ -19,7 +19,7 @@ function DeletePost({ id }: DeletePostType) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
