@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
             res.status(200).json({
               userId: user.uuid,
               token: jsonwebtoken.sign(
-                { userId: user.uuid },
+                { userId: user.uuid, isAdmin: user.isAdmin },
                 process.env.SECRET_TOKEN,
                 { expiresIn: "24h" }
               ),

@@ -5,7 +5,7 @@ exports.getPosts = (req, res) => {
     if (!err) {
       res.status(200).send(result.rows);
     } else {
-      console.log(err.message);
+      res.status(500).send(err);
     }
   });
 };
@@ -45,6 +45,20 @@ exports.createPost = (req, res) => {
   });
 };
 
-exports.DeletePost = (req, res) => {
-  let deleteQuery = `DROP`;
+exports.deletePost = (req, res) => {
+  if (req.auth.id != req.body.userId && req.auth.isAdmin != true) {
+    res.status(401).send("You're not authorized to do that !");
+  }
+
+  console.log(req.body);
+  client.query(
+    `DELETE FROM posts WHERE id= ${req.params.id}`,
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+
+      res.status(200).send("Post deleted successfully");
+    }
+  );
 };
