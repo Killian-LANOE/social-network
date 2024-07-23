@@ -10,30 +10,30 @@ exports.signup = (req, res, next) => {
     .hash(req.body.password, 10)
 
     .then((hash) => {
-      let insertQuery = `INSERT INTO users(uuid, username, password, email) VALUES('${userUuid}' ,'${req.body.username}', '${hash}', '${req.body.email}')`;
+      const insertQuery = `INSERT INTO users(uuid, username, password, email) VALUES($1,$2,$3,$4)`;
+      const queryValues = [userUuid, req.body.username, hash, req.body.email];
 
-      client.query(insertQuery, (err, result) => {
+      client.query(insertQuery, queryValues, (err, result) => {
         if (!err) {
-          res.status(201).send("L'utilisateur à bien été crée !");
+          res.status(201).send("User created !");
         } else {
-          res.status(500).json({ err });
+          res.status(500).send(err);
         }
       });
     })
 
     .catch((error) => {
-      res.status(500).json({ error });
+      res.status(500).json(error);
     });
 };
 
 exports.login = (req, res, next) => {
   client.query(
-    `SELECT * FROM users WHERE email = '${req.body.email}'`,
+    `SELECT * FROM users WHERE email = $1`,
+    [req.body.email],
     (err, result) => {
       if (err) {
-        res
-          .status(401)
-          .json({ message: "Identifiant ou mot de passe incorrecte" });
+        res.status(401).json({ message: "Username or password incorrect" });
       }
 
       // Attribute to user the data of our select
@@ -44,9 +44,7 @@ exports.login = (req, res, next) => {
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
-            res
-              .status(401)
-              .json({ message: "Identifiant ou mot de passe incorrecte" });
+            res.status(401).json({ message: "Username or password incorrect" });
           } else {
             res.status(200).json({
               userId: user.uuid,
@@ -58,17 +56,22 @@ exports.login = (req, res, next) => {
             });
           }
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => res.status(500).send(error));
     }
   );
 };
 
 exports.getUser = (req, res, next) => {
+  if (!req.auth.isAdmin) {
+    res.status(401).send("You don't have the right to do that");
+    return;
+  }
+
   client.query(`SELECT * FROM users`, (err, result) => {
     if (!err) {
       res.status(200).send(result.rows);
     } else {
-      res.status(500).send(err.message);
+      res.status(500).send(err);
     }
   });
 };
