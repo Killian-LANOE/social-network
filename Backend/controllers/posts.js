@@ -13,7 +13,8 @@ exports.getPosts = (req, res) => {
 
 exports.getSpecificPost = (req, res) => {
   client.query(
-    `SELECT * FROM posts WHERE id = ${req.params.id} `,
+    `SELECT * FROM posts WHERE id = $1 `,
+    [req.params.id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -34,10 +35,11 @@ exports.createPost = (req, res) => {
     req.file.filename
   }`;
 
-  let insertQuery = `INSERT INTO posts(user_id, description, images_path) 
-  VALUES('${req.auth.userId}', '${postDescription}', '${filePath || null}')`;
+  const insertQuery = `INSERT INTO posts(user_id, description, images_path) 
+  VALUES($1,$2,$3)`;
+  const queryValues = [req.auth.userId, postDescription, filePath];
 
-  client.query(insertQuery, (err, result) => {
+  client.query(insertQuery, queryValues, (err, result) => {
     if (!err) {
       res.status(201).send("Post created !");
     } else {
@@ -47,12 +49,14 @@ exports.createPost = (req, res) => {
 };
 
 exports.deletePost = (req, res) => {
-  if (req.auth.id != req.body.userId && req.auth.isAdmin != true) {
+  if (req.auth.userId != req.body.userId && req.auth.isAdmin != true) {
     res.status(401).send("You're not authorized to do that !");
+    return;
   }
 
   client.query(
-    `SELECT * FROM posts WHERE id = ${req.params.id}`,
+    `SELECT * FROM posts WHERE id = $1`,
+    [req.params.id],
     (err, result) => {
       if (err) {
         res.status(404).send("No post found");
@@ -63,7 +67,8 @@ exports.deletePost = (req, res) => {
       fs.unlinkSync(`./images/${imageName}`);
 
       client.query(
-        `DELETE FROM posts WHERE id= ${req.params.id}`,
+        `DELETE FROM posts WHERE id= $1`,
+        [req.params.id],
         (err, result) => {
           if (err) {
             res.status(500).send(err);
@@ -93,7 +98,7 @@ exports.modifyPost = (req, res) => {
 
       const postDescription = req.body.description;
       const imageName = result.rows[0].images_path.split("/")[6];
-      const values = [postDescription, req.params.id];
+      const queryValues = [postDescription, req.params.id];
 
       let updateQuery = `UPDATE posts SET description = $1 WHERE id = $2`;
 
@@ -111,11 +116,11 @@ exports.modifyPost = (req, res) => {
         }
 
         updateQuery = `UPDATE posts SET description = $1, images_path = $2 WHERE id = $3`;
-        values[1] = filePath;
-        values.push(req.params.id);
+        queryValues[1] = filePath;
+        queryValues.push(req.params.id);
       }
 
-      client.query(updateQuery, values, (err, updateResult) => {
+      client.query(updateQuery, queryValues, (err, updateResult) => {
         if (err) {
           res.status(500).send(`Update error: ${err}`);
         } else {
