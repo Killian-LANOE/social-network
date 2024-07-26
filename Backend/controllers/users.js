@@ -5,13 +5,16 @@ const uuidv4 = require("uuid").v4;
 require("dotenv").config();
 
 exports.signup = (req, res, next) => {
+  const email = req.body.email;
+  const formatedEmail = email.toLowerCase();
+
   let userUuid = uuidv4();
   bcrypt
     .hash(req.body.password, 10)
 
     .then((hash) => {
       const insertQuery = `INSERT INTO users(uuid, username, password, email) VALUES($1,$2,$3,$4)`;
-      const queryValues = [userUuid, req.body.username, hash, req.body.email];
+      const queryValues = [userUuid, req.body.username, hash, formatedEmail];
 
       client.query(insertQuery, queryValues, (err, result) => {
         if (err) {
@@ -35,9 +38,12 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  const email = req.body.email;
+  const formatedEmail = email.toLowerCase();
+
   client.query(
     `SELECT * FROM users WHERE email = $1`,
-    [req.body.email],
+    [formatedEmail],
     (err, result) => {
       if (err) {
         res.status(401).json({ message: "Username or password incorrect" });
