@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import DeletePost from "../components/DeletePost";
 import ModifyPost from "../components/ModifyPost";
 
@@ -14,11 +15,16 @@ type postsType = [
 
 function Home() {
   const [postsData, setPostsData] = useState<postsType>();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchData() {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/Login");
+      return;
+    }
 
+    async function fetchData() {
       await fetch("http://127.0.0.1:3000/api/posts", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,7 +41,7 @@ function Home() {
         });
     }
     fetchData();
-  }, []);
+  }, [navigate]);
 
   return (
     <>
