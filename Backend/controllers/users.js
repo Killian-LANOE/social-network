@@ -15,7 +15,7 @@ exports.signup = (req, res, next) => {
 
       client.query(insertQuery, queryValues, (err, result) => {
         if (err) {
-          res.status(500).send(err);
+          res.status(500).send("Server Error !");
           return;
         } else {
           res.status(201).send({
@@ -30,7 +30,7 @@ exports.signup = (req, res, next) => {
     })
 
     .catch((error) => {
-      res.status(500).json(error);
+      res.status(500).json("Server Error !");
     });
 };
 
