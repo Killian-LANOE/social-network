@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import DeletePost from "../components/DeletePost";
-import ModifyPost from "../components/ModifyPost";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
@@ -54,7 +52,7 @@ function Home() {
                 className="flex flex-col items-center text-center"
                 key={index}
               >
-                <a href={post.images_path}>
+                <Link to={`/posts/${post.id}`}>
                   <figure>
                     <img
                       className="h-96"
@@ -63,10 +61,7 @@ function Home() {
                     />
                     <figcaption>{description}</figcaption>
                   </figure>
-                </a>
-
-                <DeletePost id={post.id} />
-                <ModifyPost id={post.id} />
+                </Link>
               </div>
             );
           })}
