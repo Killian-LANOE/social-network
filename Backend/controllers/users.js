@@ -16,10 +16,11 @@ exports.signup = (req, res, next) => {
       client.query(insertQuery, queryValues, (err, result) => {
         if (err) {
           res.status(500).send(err);
+          return;
         } else {
           res.status(201).send({
             token: jsonwebtoken.sign(
-              { userId: user.uuid, isAdmin: user.isAdmin },
+              { userId: userUuid, isAdmin: false },
               process.env.SECRET_TOKEN,
               { expiresIn: "24h" }
             ),
@@ -40,6 +41,7 @@ exports.login = (req, res, next) => {
     (err, result) => {
       if (err) {
         res.status(401).json({ message: "Username or password incorrect" });
+        return;
       }
 
       // Attribute to user the data of our select
