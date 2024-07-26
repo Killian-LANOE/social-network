@@ -6,6 +6,7 @@ function Header() {
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     navigate("/login");
   }
   return (
@@ -17,7 +18,10 @@ function Header() {
             <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
-          <Link to="/Login">Login</Link>
+          <>
+            <Link to="/Login">Login</Link>
+            <Link to="/Signup">Signup</Link>
+          </>
         )}
       </nav>
     </header>
