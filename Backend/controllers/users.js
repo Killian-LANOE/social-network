@@ -22,6 +22,7 @@ exports.signup = (req, res, next) => {
           return;
         } else {
           res.status(201).send({
+            userId: userUuid,
             token: jsonwebtoken.sign(
               { userId: userUuid, isAdmin: false },
               process.env.SECRET_TOKEN,
