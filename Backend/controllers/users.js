@@ -77,16 +77,27 @@ exports.login = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  if (!req.auth.isAdmin) {
-    res.status(401).send("You don't have the right to do that");
-    return;
-  }
+  client.query(
+    `SELECT * FROM users WHERE uuid = $1`,
+    [req.params.id],
+    (err, result) => {
+      const user = result.rows[0];
+      console.log(req.auth.userId);
+      console.log(user.uuid);
 
-  client.query(`SELECT * FROM users`, (err, result) => {
-    if (!err) {
-      res.status(200).send(result.rows);
-    } else {
-      res.status(500).send(err);
+      if (!req.auth.isAdmin && req.auth.userId != user.uuid) {
+        res.status(401).send("You don't have the right to do that");
+        return;
+      }
+
+      if (!err) {
+        res.status(200).send({
+          userId: user.uuid,
+          isAdmin: user.isAdmin,
+        });
+      } else {
+        res.status(500).send(err);
+      }
     }
-  });
+  );
 };
