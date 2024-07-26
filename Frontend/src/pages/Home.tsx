@@ -40,17 +40,20 @@ function Home() {
   return (
     <>
       {postsData && postsData.length > 0 ? (
-        <div>
+        <section className="m-auto">
           {postsData.map((post, index) => {
             const description = post.description.split('"');
             return (
-              <div key={index}>
+              <div
+                className="flex flex-col items-center text-center"
+                key={index}
+              >
                 <a href={post.images_path}>
                   <figure>
                     <img
+                      className="h-96"
                       src={`${post.images_path}`}
                       alt={`image number ${index}`}
-                      height={480}
                     />
                     <figcaption>{description}</figcaption>
                   </figure>
@@ -61,7 +64,7 @@ function Home() {
               </div>
             );
           })}
-        </div>
+        </section>
       ) : (
         <div>No Post Found</div>
       )}

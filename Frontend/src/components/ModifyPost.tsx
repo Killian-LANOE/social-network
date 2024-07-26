@@ -25,7 +25,7 @@ function ModifyPost({ id }: ModifyPostType) {
 
   return (
     <>
-      <form encType="multipart/form-data">
+      <form className="flex flex-col my-2 gap-4" encType="multipart/form-data">
         <input name="description" type="text" placeholder="Description"></input>
         <input name="image" type="file"></input>
       </form>

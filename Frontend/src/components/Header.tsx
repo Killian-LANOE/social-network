@@ -4,7 +4,7 @@ function Header() {
   const token = localStorage.getItem("token");
   return (
     <header>
-      <nav>
+      <nav className="flex gap-6">
         {token ? (
           <>
             <Link to="/">Home</Link>
