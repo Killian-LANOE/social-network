@@ -14,10 +14,16 @@ exports.signup = (req, res, next) => {
       const queryValues = [userUuid, req.body.username, hash, req.body.email];
 
       client.query(insertQuery, queryValues, (err, result) => {
-        if (!err) {
-          res.status(201).send("User created !");
-        } else {
+        if (err) {
           res.status(500).send(err);
+        } else {
+          res.status(201).send({
+            token: jsonwebtoken.sign(
+              { userId: user.uuid, isAdmin: user.isAdmin },
+              process.env.SECRET_TOKEN,
+              { expiresIn: "24h" }
+            ),
+          });
         }
       });
     })
