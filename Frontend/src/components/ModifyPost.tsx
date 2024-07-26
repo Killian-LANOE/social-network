@@ -4,7 +4,6 @@ type ModifyPostType = {
 
 function ModifyPost({ id }: ModifyPostType) {
   const token = localStorage.getItem("token");
-  console.log(id);
 
   function handleModification() {
     fetch(`http://127.0.0.1:3000/api/posts/${id}`, {
@@ -26,7 +25,10 @@ function ModifyPost({ id }: ModifyPostType) {
 
   return (
     <>
-      <form></form>
+      <form encType="multipart/form-data">
+        <input name="description" type="text" placeholder="Description"></input>
+        <input name="image" type="file"></input>
+      </form>
       <button onClick={handleModification}>Modify</button>
     </>
   );
