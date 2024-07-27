@@ -7,7 +7,7 @@ import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="h-screen w-auto bg-black text-white flex justify-center items-center flex-col">
+    <div className="min-h-screen w-auto bg-black text-white flex justify-center items-center flex-col">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

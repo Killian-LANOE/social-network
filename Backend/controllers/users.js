@@ -82,8 +82,6 @@ exports.getUser = (req, res, next) => {
     [req.params.id],
     (err, result) => {
       const user = result.rows[0];
-      console.log(req.auth.userId);
-      console.log(user.uuid);
 
       if (!req.auth.isAdmin && req.auth.userId != user.uuid) {
         res.status(401).send("You don't have the right to do that");

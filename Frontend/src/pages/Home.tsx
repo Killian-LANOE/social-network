@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
+import CreatePost from "../components/CreatePost";
 
 type postsType = [
   {
@@ -43,8 +44,11 @@ function Home() {
 
   return (
     <>
+      <div>
+        <CreatePost />
+      </div>
       {postsData && postsData.length > 0 ? (
-        <section className="m-auto">
+        <section className="flex m-auto flex-col-reverse">
           {postsData.map((post, index) => {
             const description = post.description.split('"');
             return (
