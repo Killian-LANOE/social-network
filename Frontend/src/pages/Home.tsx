@@ -16,6 +16,8 @@ function Home() {
   const [postsData, setPostsData] = useState<postsType>();
   const navigate = useNavigate();
 
+  const serverURL = import.meta.env.VITE_SERVER_ADDRESS;
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -24,7 +26,7 @@ function Home() {
     }
 
     async function fetchData() {
-      await fetch("http://127.0.0.1:3000/api/posts", {
+      await fetch(`${serverURL}/api/posts`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

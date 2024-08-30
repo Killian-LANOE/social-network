@@ -4,9 +4,10 @@ type DeletePostType = {
 
 function DeletePost({ id }: DeletePostType) {
   const token = localStorage.getItem("token");
+  const serverURL = import.meta.env.VITE_SERVER_ADDRESS;
 
   function handleDelete() {
-    fetch(`http://127.0.0.1:3000/api/posts/${id}`, {
+    fetch(`${serverURL}/api/posts/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -6,6 +6,7 @@ type ModifyPostType = {
 
 function ModifyPost({ id }: ModifyPostType) {
   const token = localStorage.getItem("token");
+  const serverURL = import.meta.env.VITE_SERVER_ADDRESS;
 
   function handleModification(e: FormEvent) {
     e.preventDefault();
@@ -15,7 +16,7 @@ function ModifyPost({ id }: ModifyPostType) {
     data.append("description", target["description"].value);
     data.append("image", target["image"].files[0]);
 
-    fetch(`http://127.0.0.1:3000/api/posts/${id}`, {
+    fetch(`${serverURL}/api/posts/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,

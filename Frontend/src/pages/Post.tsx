@@ -6,6 +6,7 @@ import ModifyPost from "../components/ModifyPost";
 function Post() {
   const params = useParams();
   const userId = localStorage.getItem("userId");
+  const serverURL = import.meta.env.VITE_SERVER_ADDRESS;
 
   type postType = {
     id: string;
@@ -32,7 +33,7 @@ function Post() {
     }
 
     async function fetchData() {
-      await fetch(`http://127.0.0.1:3000/api/posts/${postId}`, {
+      await fetch(`${serverURL}/api/posts/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

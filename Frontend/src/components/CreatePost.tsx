@@ -2,6 +2,7 @@ import { FormEvent } from "react";
 
 function CreatePost() {
   const token = localStorage.getItem("token");
+  const serverURL = import.meta.env.VITE_SERVER_ADDRESS;
 
   function handleCreation(e: FormEvent) {
     e.preventDefault();
@@ -11,7 +12,7 @@ function CreatePost() {
     data.append("description", target["description"].value);
     data.append("image", target["image"].files[0]);
 
-    fetch(`http://127.0.0.1:3000/api/posts/`, {
+    fetch(`${serverURL}/api/posts/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

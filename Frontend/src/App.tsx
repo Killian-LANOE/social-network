@@ -3,12 +3,12 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
-import Header from "./components/Header";
+// import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="min-h-screen w-auto bg-blue-900 text-white flex justify-center items-center flex-col">
-      <Header />
+    <div className="min-h-screen w-auto text-white flex justify-center items-center flex-col">
+      {/* <Header /> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
