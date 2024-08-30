@@ -1,17 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Signup from "./pages/Signup";
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="min-h-screen w-auto bg-black text-white flex justify-center items-center flex-col">
+    <div className="min-h-screen w-auto bg-blue-900 text-white flex justify-center items-center flex-col">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/posts/:id" element={<Post />} />
       </Routes>
