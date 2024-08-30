@@ -1,9 +1,12 @@
-import { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
   const emailRegex = `(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))`;
+
+  const [emailFilled, setEmailFilled] = useState(false);
+  const [passwordFilled, setPasswordFilled] = useState(false);
 
   function handleSignup(e: FormEvent) {
     e.preventDefault();
@@ -17,7 +20,9 @@ function Login() {
         password: target["password"].value,
       }),
     })
-      .then((res) => res.json())
+      .then((res) =>
+        res.ok ? res.json() : console.log("Email or Password Error !")
+      )
       .then((data) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
@@ -26,21 +31,76 @@ function Login() {
       .catch((error) => console.log(error));
   }
 
+  useEffect(() => {
+    const emailInput = document.querySelector(
+      'input[name="email"]'
+    ) as HTMLInputElement;
+    const passwordInput = document.querySelector(
+      'input[name="password"]'
+    ) as HTMLInputElement;
+
+    const handleEmailInput = () => setEmailFilled(emailInput.value !== "");
+    const handlePasswordInput = () =>
+      setPasswordFilled(passwordInput.value !== "");
+
+    emailInput.addEventListener("input", handleEmailInput);
+    passwordInput.addEventListener("input", handlePasswordInput);
+
+    return () => {
+      emailInput.removeEventListener("input", handleEmailInput);
+      passwordInput.removeEventListener("input", handlePasswordInput);
+    };
+  }, []);
+
   return (
-    <main>
+    <main className="relative h-96 w-3/4 flex flex-col items-center border-2 rounded-2xl  ">
+      <div className="bg-black/10 absolute blur h-full w-full rounded-2xl"></div>
+      <h1 className="z-10 mt-4 font-bold text-2xl">Login</h1>
       <form
-        className="flex flex-col gap-3 text-black"
+        className="my-auto z-10 flex flex-col gap-8 text-black"
         onSubmit={(e) => handleSignup(e)}
       >
-        <input
-          pattern={emailRegex}
-          type="email"
-          name="email"
-          placeholder="email"
-        ></input>
-        <input type="password" name="password" placeholder="password"></input>
-        <button className="border-2 text-white">Login</button>
+        <div className="h-10 relative border-b-2">
+          <input
+            className="peer h-full w-full bg-transparent outline-none text-white"
+            pattern={emailRegex}
+            type="email"
+            name="email"
+          ></input>
+          <h2
+            className={`top-1 peer-focus:-top-5 font-bold tracking-wide  ${
+              emailFilled ? "-top-[1.25rem]" : ""
+            } transition-all ease-in-out absolute pointer-events-none text-white`}
+          >
+            Email
+          </h2>
+        </div>
+
+        <div className="h-10 relative border-b-2">
+          <input
+            className="peer h-full w-full bg-transparent outline-none text-white"
+            type="password"
+            name="password"
+          ></input>
+          <h2
+            className={`top-1 peer-focus:-top-5 font-bold tracking-wide ${
+              passwordFilled ? "-top-[1.25rem]" : ""
+            } transition-all ease-in-out absolute pointer-events-none text-white`}
+          >
+            Password
+          </h2>
+        </div>
+
+        <button className="hover:bg-blue-200 border-2 rounded-2xl h-10 bg-white text-black">
+          Log in
+        </button>
       </form>
+      <p className="z-10 mb-6 ">
+        Don't have an account ?{" "}
+        <Link to={"/Register"} className="hover:font-bold hover:cursor-pointer">
+          Register
+        </Link>
+      </p>
     </main>
   );
 }

@@ -20,7 +20,7 @@ function Header() {
         ) : (
           <>
             <Link to="/Login">Login</Link>
-            <Link to="/Signup">Signup</Link>
+            <Link to="/Register">Register</Link>
           </>
         )}
       </nav>
