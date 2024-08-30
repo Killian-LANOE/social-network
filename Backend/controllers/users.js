@@ -42,6 +42,12 @@ exports.login = (req, res, next) => {
   const email = req.body.email;
   const formatedEmail = email.toLowerCase();
 
+  if (!req.body.email || !req.body.password) {
+    return res
+      .status(400)
+      .json({ Error: "Email or Password can't be empty !" });
+  }
+
   client.query(
     `SELECT * FROM users WHERE email = $1`,
     [formatedEmail],
