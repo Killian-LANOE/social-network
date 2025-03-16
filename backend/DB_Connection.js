@@ -1,5 +1,5 @@
-const { Client } = require("pg");
-const client = new Client({
+const pgp = require("pg-promise")();
+const database = pgp({
   host: process.env.PGHOST,
   database: process.env.PGDATABASE,
   port: process.env.PGPORT,
@@ -7,4 +7,4 @@ const client = new Client({
   password: process.env.PGPASSWORD,
 });
 
-module.exports = client;
+module.exports = database;
