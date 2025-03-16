@@ -1,19 +1,29 @@
-exports.getPosts = (req, res, next) => {
-  res.json({ message: "Posts" });
+const client = require("../DB_Connection");
+
+exports.getPosts = async (req, res, next) => {
+  client.connect();
+
+  result = await client.query(`SELECT * FROM posts;`);
+
+  res.status(200).json(result.rows);
+
+  client.end();
 };
 
-exports.getSinglePost = (req, res, next) => {
-  res.json({ message: "Post" });
+exports.getSinglePost = async (req, res, next) => {
+  client.connect();
+
+  result = await client.query(
+    `SELECT * FROM posts WHERE postid=${req.params.id};`
+  );
+
+  res.status(200).json(result.rows);
+
+  client.end();
 };
 
-exports.createPost = (req, res, next) => {
-  res.json({ message: "Post Created" });
-};
+exports.createPost = (req, res, next) => {};
 
-exports.deletePost = (req, res, next) => {
-  res.json({ message: "Post Deleted" });
-};
+exports.deletePost = (req, res, next) => {};
 
-exports.modifyPost = (req, res, next) => {
-  res.json({ message: "Post Modified" });
-};
+exports.modifyPost = (req, res, next) => {};
