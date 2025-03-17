@@ -22,12 +22,16 @@ exports.getSinglePost = async (req, res, next) => {
 
 exports.createPost = (req, res, next) => {
   try {
+    const imageUrl = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
     database.none(
       `INSERT INTO posts(userid, description, image_url) VALUES($1, $2, $3)`,
-      [req.auth.userid, req.body.description, req.body.image_url]
+      [req.auth.userid, req.body.description, imageUrl]
     );
     return res.status(201).json({ message: "Post Created successfully" });
   } catch (error) {
+    console.log("catch error");
     return res.status(500).json({ error });
   }
 };

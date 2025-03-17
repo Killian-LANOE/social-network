@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const postsRoutes = require("./router/posts");
 const usersRoutes = require("./router/users");
+const path = require("path");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -21,5 +22,6 @@ app.use(express.json());
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
