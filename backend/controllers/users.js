@@ -11,8 +11,6 @@ exports.Login = async (req, res, next) => {
       [req.body.email]
     );
 
-    console.log(userData);
-
     bcrypt
       .compare(req.body.password, userData.password)
       .then((valid) => {
@@ -23,7 +21,7 @@ exports.Login = async (req, res, next) => {
         res.status(200).json({
           userid: userData.userid,
           token: jwt.sign(
-            { userid: userData.userid },
+            { userid: userData.userid, is_admin: userData.is_admin },
             process.env.SECRET_TOKEN,
             {
               expiresIn: "24h",
@@ -33,7 +31,6 @@ exports.Login = async (req, res, next) => {
       })
 
       .catch((error) => {
-        console.log("jwt error");
         return res.status(500).json({ error });
       });
   } catch (error) {

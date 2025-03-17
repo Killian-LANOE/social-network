@@ -24,7 +24,7 @@ exports.createPost = (req, res, next) => {
   try {
     database.none(
       `INSERT INTO posts(userid, description, image_url) VALUES($1, $2, $3)`,
-      [req.body.userid, req.body.description, req.body.image_url]
+      [req.auth.userid, req.body.description, req.body.image_url]
     );
     return res.status(201).json({ message: "Post Created successfully" });
   } catch (error) {
@@ -32,8 +32,19 @@ exports.createPost = (req, res, next) => {
   }
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
   try {
+    const postData = await database.one(
+      `SELECT * FROM posts WHERE postid = $1`,
+      [req.params.id]
+    );
+
+    if (req.auth.is_admin != true) {
+      if (req.auth.userid != postData.userid) {
+        return res.status(401).json("You are not authorized to do that");
+      }
+    }
+
     database.none(`DELETE FROM posts WHERE postid = $1`, [req.params.id]);
     return res.status(200).json({ message: "Post Deleted Successfully" });
   } catch (error) {
@@ -47,6 +58,10 @@ exports.modifyPost = async (req, res, next) => {
       `SELECT * FROM posts WHERE postid = $1`,
       [req.params.id]
     );
+
+    if (req.auth.userid != postData.userid || req.auth.is_admin != true) {
+      return res.status(401).json("You are not authorized to do that");
+    }
     if (req.body.description === undefined) {
       req.body.description = postData.description;
     }
@@ -58,6 +73,7 @@ exports.modifyPost = async (req, res, next) => {
       `UPDATE posts SET description = $1, image_url = $2 WHERE postid = $3`,
       [req.body.description, req.body.image_url, req.params.id]
     );
+
     return res.status(200).json({ message: "Post Modified Successfully" });
   } catch (error) {
     return res.status(500).json({ error });
