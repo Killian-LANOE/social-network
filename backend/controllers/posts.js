@@ -1,4 +1,5 @@
 const database = require("../DB_Connection");
+const fs = require("fs");
 
 exports.getPosts = async (req, res, next) => {
   try {
@@ -48,8 +49,10 @@ exports.deletePost = async (req, res, next) => {
         return res.status(401).json("You are not authorized to do that");
       }
     }
-
-    database.none(`DELETE FROM posts WHERE postid = $1`, [req.params.id]);
+    const filename = postData.image_url.split("/images/")[1];
+    fs.unlink(`images/${filename}`, () => {
+      database.none(`DELETE FROM posts WHERE postid = $1`, [req.params.id]);
+    });
     return res.status(200).json({ message: "Post Deleted Successfully" });
   } catch (error) {
     return res.status(500).json({ error });
