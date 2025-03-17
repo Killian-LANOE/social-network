@@ -92,6 +92,10 @@ exports.modifyPost = async (req, res, next) => {
 
     if (imageUrl === null) {
       imageUrl = postData.image_url;
+      database.none(
+        `UPDATE posts SET description = $1, image_url = $2 WHERE postid = $3`,
+        [req.body.description, imageUrl, req.params.id]
+      );
     } else {
       const filename = postData.image_url.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
@@ -100,8 +104,8 @@ exports.modifyPost = async (req, res, next) => {
           [req.body.description, imageUrl, req.params.id]
         );
       });
-      return res.status(200).json({ message: "Post Modified Successfully" });
     }
+    return res.status(200).json({ message: "Post Modified Successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }
