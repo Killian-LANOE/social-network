@@ -1,5 +1,10 @@
-function App() {
-  return <main className="bg-black h-screen w-screen text-white">App</main>;
-}
+import { RouterProvider } from "react-router";
+import { router } from "./router/router";
 
-export default App;
+export default function App() {
+  return (
+    <div className="bg-slate-200 text-white h-screen w-screen">
+      <RouterProvider router={router} />
+    </div>
+  );
+}
