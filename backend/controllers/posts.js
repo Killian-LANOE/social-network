@@ -1,4 +1,3 @@
-const { error } = require("console");
 const database = require("../DB_Connection");
 const fs = require("fs");
 
